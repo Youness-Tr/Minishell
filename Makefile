@@ -1,120 +1,52 @@
-# CC = cc
-# NAME = minishell
-# LIBFT_DIR = Libft
-# LIBFT = $(LIBFT_DIR)/libft.a
-
-# CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
-
-# SRC = Main/main.c
-# SRC += Builtins/env.c Builtins/exit.c
-# SRC += Lexer/lexical.c Lexer/lextools.c Lexer/token.c Lexer/lex_utils.c
-# SRC += Leaks/free_all.c Leaks/garbedge.c
-# SRC += Parser/ft_parser.c Parser/putils.c Parser/tools.c
-# SRC += Executer/ft_execute.c
-
-# GREEN = \033[0;32m
-# RED = \033[0;31m
-# YELLOW = \033[0;33m
-# NC = \033[0m
-
-# # ASCII Art
-# NEOSHELL_ART = "\n\
-# ${GREEN}  _   _            _____ _          _ _ ${NC}\n\
-# ${GREEN} | \\ | |          / ____| |        | | |${NC}\n\
-# ${GREEN} |  \\| | ___  ___| (___ | |__   ___| | |${NC}\n\
-# ${GREEN} ||/ _ \\/ _ \\\\___ \\| '_ \\ / _ \\ | |${NC}\n\
-# ${GREEN} | |\\  |  __/ (_) |___) | | | |  __/ | |${NC}\n\
-# ${GREEN} |_| \\_|\\___|\\___/_____/|_| |_|\\___|_|_|${NC}\n\
-# ${GREEN}                                        ${NC}\n\
-# ${GREEN}                                        ${NC}\n"
-
-# OBJ = $(SRC:.c=.o)
-
-# all: $(LIBFT) $(NAME)
-
-# $(LIBFT):
-# 	$(MAKE) -C $(LIBFT_DIR)
-# 	$(MAKE) -C $(LIBFT_DIR) bonus
-
-# $(NAME): $(LIBFT) $(OBJ)
-# 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -lreadline -L$(LIBFT_DIR) -lft
-# 	@sleep 1
-# 	@echo "\033[0;32mcreating the minishell is Done!\033[0m"
-# 	@echo -e "$(NEOSHELL_ART)"
-
-# clean:
-# 	@rm -rf $(OBJ)
-# 	$(MAKE) -C $(LIBFT_DIR) clean
-
-# fclean: clean
-# 	@rm -rf $(NAME)
-# 	$(MAKE) -C $(LIBFT_DIR) fclean
-# 	@sleep 1
-# 	@echo "\033[0;31mremoving minishell is Done!\033[0m"
-
-# re: fclean all
-
-# .PHONY: all clean fclean re
-
-
-
-# Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror
 
-# Project name
 NAME = minishell
 
-# Directories
 LIBFT_DIR = Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Source files
-SRC = Main/main.c
-SRC += Builtins/env.c Builtins/exit.c Builtins/get_set.c Builtins/export.c
-SRC += Lexer/lexical.c Lexer/lextools.c Lexer/token.c Lexer/lex_utils.c
+SRC = Main/main.c Main/mtools.c
+SRC += Expand/expander.c Expand/exputils.c Expand/exp_heredoc.c Expand/exp_tool.c
+SRC += Builtins/env.c Builtins/exit.c Builtins/echo.c Builtins/export.c Builtins/exit_tools.c
+SRC += Builtins/pwd.c Builtins/unset.c Builtins/get_set.c Builtins/cd.c
+SRC += Builtins/export_utils.c Builtins/export_helper.c Builtins/env_utils.c
+SRC += Lexer/lexical.c Lexer/lextools.c Lexer/token.c Lexer/lex_utils.c Lexer/token_tools.c
 SRC += Leaks/free_all.c Leaks/garbedge.c
-SRC += Parser/ft_parser.c Parser/putils.c Parser/tools.c
-SRC += Expand/expander.c Expand/utils.c
-SRC += Executer/ft_execute.c
+SRC += Parser/ft_parser.c Parser/putils.c Parser/tools.c Parser/left_hand.c
+SRC += Executer/ft_execute.c Executer/ex_utils.c Executer/ex_heredoc.c Executer/ex_io.c
+SRC += Executer/ex_builtins.c Executer/ex_pipes.c Executer/ex_error.c
+SRC += Executer/ex_io_tools.c Executer/ex_tools.c  Executer/ex_cmd.c Executer/ex_pipeline.c
+SRC += Executer/ex_and.c Executer/ex_or.c Executer/ex_args.c
+SRC += signals/signal.c wildcard/asterisk.c wildcard/astirisk_tool.c
 
-# Object files
 OBJ = $(SRC:.c=.o)
 
-# Colors
-GREEN = \033[1;32m
-GREEN_BOLD = \033[1;32m
-RED = \033[1;31m
-YELLOW = \033[1;33m
-NC = \033[0m
-
-# Targets
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@echo "$(YELLOW)Building Libft...$(NC)"
+	@echo "Building Libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
 	@$(MAKE) -C $(LIBFT_DIR) bonus
 
 $(NAME): $(LIBFT) $(OBJ)
-	@echo "$(YELLOW)Linking $(NAME)...$(NC)"
+	@echo "Linking $(NAME)..."
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -lreadline -L$(LIBFT_DIR) -lft
 	@sleep 1
-	@echo "${GREEN_BOLD}Creating minishell is Done!${NC}"
+	@echo "Creating minishell is Done!"
 
 clean:
-	@echo "$(RED)Cleaning object files...$(NC)"
+	@echo "Cleaning object files.."
 	@rm -rf $(OBJ)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@echo "$(RED)Removing $(NAME)...$(NC)"
+	@echo "Removing ..."
 	@rm -rf $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@sleep 1
-	@echo "$(RED)Removing minishell is Done!${NC}"
+	@echo "Removing minishell is Done!"
 
 re: fclean all
 
-# Phony targets
 .PHONY: all clean fclean re

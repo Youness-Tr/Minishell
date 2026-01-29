@@ -6,7 +6,7 @@
 /*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:04:03 by ajabri            #+#    #+#             */
-/*   Updated: 2024/06/25 16:29:01 by kali             ###   ########.fr       */
+/*   Updated: 2024/08/08 10:30:01 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	t_len = ft_strlen(s1) + ft_strlen(s2);
-	strs = malloc(t_len + 1);
+	strs = ft_malloc(t_len + 1);
 	if (!strs)
 		return (NULL);
 	ft_while(strs, s1, s2);

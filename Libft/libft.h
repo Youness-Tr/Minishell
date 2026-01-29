@@ -3,38 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: venom <venom@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:26:18 by ajabri            #+#    #+#             */
-/*   Updated: 2024/07/12 14:22:06 by venom            ###   ########.fr       */
+/*   Updated: 2024/08/08 10:43:53 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <fcntl.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <fcntl.h>
 
 typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+void				*ft_malloc(size_t size);
 // part 1
 int					ft_isspace(char c);
-int 				ft_isalnum(int c);
+int					ft_isalnum(int c);
 int					ft_isalpha(int c);
-int					ft_isascii(int c);
+int					ft_isspace(char c);
 int					ft_isdigit(int c);
 int					ft_isprint(int c);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
-int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t				ft_strlen(const char *c);
 void				*ft_memset(void *b, int c, size_t len);
@@ -45,6 +46,7 @@ void				*ft_memcpy(void *dst, const void *src, size_t n);
 void				*ft_memmove(void *dst, const void *src, size_t n);
 char				*ft_strnstr(const char *str, const char *to_find,
 						size_t len);
+int					ft_strcmp(const char *s1, const char *s2);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t				ft_strlcat(char *dest, const char *src, size_t size);
 char				*ft_strdup(const char *s1);

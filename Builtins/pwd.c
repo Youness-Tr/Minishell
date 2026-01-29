@@ -3,63 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:31:18 by ytarhoua          #+#    #+#             */
-/*   Updated: 2024/07/13 13:50:28 by ytarhoua         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:55:02 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../Header/headers.h"
+#include "../Header/headers.h"
 
-t_env *search_env(char *s)
+t_env	*search_envl(char *s)
 {
-    t_env *env = neobash.envl;
-    t_env *tmp = env;
+	t_env	*env;
+	t_env	*tmp;
 
-    while (tmp)
-    {
-        if (!ft_strncmp(s, tmp->key, ft_strlen(s)))
-            return (tmp->value);
-        tmp->next;
-    }
-    tmp = env;
-    return (NULL);
+	env = g_neobash.envl;
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strncmp(s, tmp->key, ft_strlen(s)))
+			return (tmp);
+		tmp = tmp->next;
+	}
+	tmp = env;
+	return (NULL);
 }
 
-//to check option like pwd -h -> error
-
-int option(char *str)
+int	option(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] == '-'){
-            i++;
-            printf("bash: pwd: '%s': invalid option", str[i]);
-            return (1);
-        }
-        i++;
-    }
-    if (i > 3)
-        return (1);
-    return (0);
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] == '-')
+		{
+			printf("bash: pwd: '%s': invalid option\n", &str[i]);
+			g_neobash.status = 2;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
 
-void ft_pwd(char *s)
+int	ft_pwd(char **s)
 {
-    option(s);
-    t_env *v = search_env(s);
-    if (v->value)
-        ft_putstr_fd(v->value, 1);
-    if (v == NULL)
-    {
-	    v->value = getcwd(v->value, 0);
-	    if (!v->value)
-		    return;
-	    ft_putstr_fd(v->value, 1);
-    }
-	ft_putstr_fd("\n", 1);
+	char	*path;
+	int		c;
+
+	c = 1;
+	path = NULL;
+	if (option(s[c]))
+		return (2);
+	path = getcwd(NULL, 0);
+	printf("%s\n", path);
+	free(path);
+	return (0);
 }

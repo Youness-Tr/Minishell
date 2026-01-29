@@ -3,108 +3,107 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: venom <venom@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 10:16:34 by ajabri            #+#    #+#             */
-/*   Updated: 2024/07/12 15:01:47 by venom            ###   ########.fr       */
+/*   Updated: 2024/08/13 22:22:20 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../Header/headers.h"
+#include "../Header/headers.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+bool	ft_check_tk(char *line)
 {
-	size_t	i;
+	int	i;
 
-    i = 0;
-    while (s1[i] && s2[i] && s1[i] == s2[i])
-    {
-        i++;
-    }
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	i = 0;
+	if (line[i] == '>' && line[i + 1] == '>')
+		return (true);
+	else if (line[i] == '<' && line[i + 1] == '<')
+		return (true);
+	else if (line[i] == '|' && line[i + 1] == '|')
+		return (true);
+	else if (line[i] == '&' && line[i + 1] == '&')
+		return (true);
+	else
+		return (false);
 }
 
-bool is_quotition(char i)
+bool	ft_check_tkv2(char c)
 {
-    if (i == 34)
-        return (true);
-    if (i == 39)
-        return (true);
-    else
-        return (false);
+	if (c == '>')
+		return (true);
+	else if (c == '<')
+		return (true);
+	else if (c == '|')
+		return (true);
+	else if (c == '(')
+		return (true);
+	else if (c == ')')
+		return (true);
+	else
+		return (false);
 }
 
-
-int count_inside_quotes(int i, char q)
+int	count_inside_quotes(int i, char q)
 {
-    i++;
-    while (neobash.line[i] && neobash.line[i] != q)
-    {
-        i++;
-    }
-    if (neobash.line[i] == q)
-        i++;
-    return i; // Return the index of the ending quote character
+	while (g_neobash.line[i] && (g_neobash.line[i] == '\''
+			|| g_neobash.line[i] == '"'))
+	{
+		q = g_neobash.line[i];
+		i++;
+		while (g_neobash.line[i] && g_neobash.line[i] != q)
+			i++;
+		if (g_neobash.line[i] == q)
+			i++;
+		if (g_neobash.line[i] && g_neobash.line[i] != ' '
+			&& !ft_check_tk(&g_neobash.line[i])
+			&& !ft_check_tkv2(g_neobash.line[i]))
+		{
+			while (g_neobash.line[i] && !ft_isspace(g_neobash.line[i]))
+				i++;
+		}
+		else
+			break ;
+	}
+	return (i);
 }
 
-int count_whitespaces(char *line, int i)
+int	count_whitespaces(char *line, int i)
 {
-    int count;
+	int	count;
 
-    count = 0;
-    while (line[i] && (line[i] == ' ' || line[i] == '\t' || line[i] == '\v'))
-    {
-        i++;
-        count += 1;
-    }
-    return (count);
+	count = 0;
+	while (line[i] && (line[i] == ' ' || line[i] == '\t' || line[i] == '\v'))
+	{
+		i++;
+		count += 1;
+	}
+	return (count);
 }
 
-bool is_whitespaces(char line)
+t_token_t	set_token(int i)
 {
-    if (line == ' ' || line == '\t' || line == '\v')
-        return (true);
-    return (false);
-}
-bool is_badchar(char *c)
-{
-    if (c[0] == ';' || c[0] == '\\' || c[0] == '{' || c[0] == '}')
-        return (true);
-    if (c[0] == '[' || c[0] == ']' || c[0] == '@' || c[0] == '#' || c[0] == '%')
-        return (true);
-    if (c[0] == '!' || c[0] == ':')
-        return (true);
-    if (c[0] == '&' && ft_strlen(c) == 1)
-        return (true);
-    else
-        return (false);
-}
-t_token_t set_token(int i)
-{
-    if (!ft_strncmp(neobash.sub[i], ">",1))
-        return (REDIRECT);
-    else if (!ft_strncmp(neobash.sub[i], "<", 1))
-        return (INPUT);
-    else if (!ft_strncmp(neobash.sub[i], ">>", 2))
-        return (APPEND);
-    else if (!ft_strncmp(neobash.sub[i], "<<", 2))
-        return (HEREDOC);
-    // else if (!ft_strncmp(neobash.sub[i], "*", ft_strlen(neobash.sub[i])))
-    //     return (STAR);
-    else if (!ft_strncmp(neobash.sub[i], "&&", 2))
-        return (AND);
-    else if (!ft_strncmp(neobash.sub[i], "||", 2))
-        return (OR);
-    else if (!ft_strncmp(neobash.sub[i], "|", 1))
-        return (PIPE);
-    else if (!ft_strncmp(neobash.sub[i], "(", 1))
-        return (L_PARENT);
-    else if (!ft_strncmp(neobash.sub[i], ")", 1))
-        return (R_PARENT);
-    else if (is_badchar(neobash.sub[i]))
-        return (SYNTAX);
-    else
-    {
-        return (WRD);
-    }
+	if (!ft_strcmp(g_neobash.sub[i], ">"))
+		return (REDIRECT);
+	else if (!ft_strcmp(g_neobash.sub[i], "<"))
+		return (INPUT);
+	else if (!ft_strcmp(g_neobash.sub[i], ">>"))
+		return (APPEND);
+	else if (!ft_strcmp(g_neobash.sub[i], "<<"))
+		return (HEREDOC);
+	else if (!ft_strcmp(g_neobash.sub[i], "&&"))
+		return (AND);
+	else if (!ft_strcmp(g_neobash.sub[i], "||"))
+		return (OR);
+	else if (!ft_strcmp(g_neobash.sub[i], "|"))
+		return (PIPE);
+	else if (!ft_strcmp(g_neobash.sub[i], "("))
+		return (L_PARENT);
+	else if (!ft_strcmp(g_neobash.sub[i], ")"))
+		return (R_PARENT);
+	else if (is_badchar(g_neobash.sub[i]))
+		return (SYNTAX);
+	else
+		return (WRD);
 }

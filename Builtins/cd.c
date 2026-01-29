@@ -3,125 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 20:58:07 by ytarhoua          #+#    #+#             */
-/*   Updated: 2024/07/03 18:49:59 by ytarhoua         ###   ########.fr       */
+/*   Updated: 2024/08/15 12:56:58 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../Header/headers.h"
+#include "../Header/headers.h"
 
-// size_t	ft_strlen(const char *c)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (c[i])
-// 		i++;
-// 	return (i);
-// }
-
-// static char	*ft_while(char *ptr, const char *str1, const char *str2)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (str1[i])
-// 	{
-// 		ptr[i] = str1[i];
-// 		i++;
-// 	}
-// 	while (str2[j])
-// 	{
-// 		ptr[i] = str2[j];
-// 		j++;
-// 		i++;
-// 	}
-// 	ptr[i] = '\0';
-// 	return (ptr);
-// }
-
-// char	*ft_strjoin(char const *s1, char const *s2)
-// {
-// 	char	*strs;
-// 	int		t_len;
-
-// 	if (!s1 || !s2)
-// 		return (NULL);
-// 	t_len = ft_strlen(s1) + ft_strlen(s2);
-// 	strs = malloc(t_len + 1);
-// 	if (!strs)
-// 		return (NULL);
-// 	ft_while(strs, s1, s2);
-// 	return (strs);
-// }
-
-// int	ft_strncmp(const char *s1, const char *s2, size_t n)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	if (n == 0)
-// 		return (0);
-// 	while (s1[i] && s2[i] && s1[i] == s2[i] && i < n - 1)
-// 	{
-// 		i++;
-// 	}
-// 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-// }
-
-int skip(char *s)
+int	update_pwd(void)
 {
-    int i = 0;
+	char	*cwd;
 
-    if (!ft_strncmp(s, "cd", 2))
-        i += 2;
-    while (s[i] && s[i] == ' ')
-        i++;
-    if (!s[i])
-        return (0);
-    return (i);
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (1);
+	return (update_env("PWD", cwd), free(cwd), 0);
 }
 
-void bt_cd(char *s)
+int	skip(char *s)
 {
-    int i;
-    char *str;
+	int	i;
 
-    i = 0;
-    i = skip(s);
-    if (i == 0)
-    {
-        chdir("/home");
-        update_env("OLDPWD", get_env_val("PWD"));
-        update_env("PWD", "/home");
-        return;
-    }
-    s += i;
-    if (s[0] && s[0] == '~')
-    {
-        s++;
-        str = ft_strjoin("/home", s);
-        chdir(str);
-        update_env("OLDPWD", get_env_val("PWD"));
-        update_env("PWD", str);
-        free(str);
-        return;
-    }
-    else if(chdir(s) == -1)
-    {
-        perror("cd");
-        return;
-    }
-    update_env("OLDPWD", get_env_val("PWD"));
-    update_env("PWD", s);
-    // printf("%s\n", s);
+	i = 0;
+	while (s[i] && s[i] == ' ')
+		i++;
+	if (!s[i])
+		return (0);
+	return (i);
 }
 
-// int main(void)
-// {
-//     bt_cd("cd    /home/user");
-// }
+int	count_args(char **s)
+{
+	int	i;
+
+	i = 0;
+	if (!s || !*s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
+
+int	ft_home(void)
+{
+	char	*home;
+
+	home = ft_expand("$HOME");
+	if (ft_strlen(home) > 1)
+		chdir(home);
+	else
+	{
+		ft_putstr_fd("cd: HOME not set\n", 2);
+		return (1);
+	}
+	update_env("OLDPWD", get_env_val("PWD"));
+	return (0);
+}
+
+int	bt_cd(char **s)
+{
+	int	c;
+
+	c = 1;
+	if (count_args(s) > 2)
+		return (ft_error("g_neobash: cd: too many arguments", NULL), 1);
+	if (!s[c])
+	{
+		if (ft_home())
+			return (1);
+		return (update_pwd(), 0);
+	}
+	else if (chdir(s[c]) == -1)
+	{
+		ft_error("cd: No such file or directory", NULL);
+		return (1);
+	}
+	if (get_env_val("PWD") == NULL)
+		update_env("OLDPWD", ft_strdup(" "));
+	else
+		update_env("OLDPWD", get_env_val("PWD"));
+	return (update_pwd(), 0);
+}

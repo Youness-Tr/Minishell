@@ -1,23 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/13 22:34:55 by ajabri            #+#    #+#             */
-/*   Updated: 2024/08/13 22:34:58 by ajabri           ###   ########.fr       */
+/*   Created: 2024/08/10 12:48:12 by ytarhoua          #+#    #+#             */
+/*   Updated: 2024/08/10 12:50:56 by ytarhoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../Header/headers.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+size_t	ft_strlenc(char *str, char c)
 {
 	int	i;
 
 	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
+	while (str[i] && str[i] != c)
 		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	return (i);
+}
+
+void	ft_strcpy(char *dst, char *src, char c)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] && src[i] != c)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
 }

@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   exp_tool.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/13 22:34:55 by ajabri            #+#    #+#             */
-/*   Updated: 2024/08/13 22:34:58 by ajabri           ###   ########.fr       */
+/*   Created: 2024/08/09 16:43:13 by ytarhoua          #+#    #+#             */
+/*   Updated: 2024/08/14 22:30:09 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../Header/headers.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+bool	valid_char(char c)
 {
-	int	i;
+	if (ft_isalnum(c) || c == '_')
+		return (true);
+	return (false);
+}
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+char	*dquote_str(char *str, int *i)
+{
+	int	start;
+
+	start = *i;
+	while (str[*i] && str[*i] != '"' && str[*i] != '$')
+		(*i)++;
+	return (ft_substr(str, start, *i - start));
 }

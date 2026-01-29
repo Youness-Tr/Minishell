@@ -6,7 +6,7 @@
 /*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 11:57:46 by ajabri            #+#    #+#             */
-/*   Updated: 2023/11/18 11:47:33 by ajabri           ###   ########.fr       */
+/*   Updated: 2024/08/14 07:51:00 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 			i++;
 		while (s1[j - 1] && j > i && ft_strchr(set, s1[j - 1]))
 			j--;
-		s = (char *)malloc(j - i + 1);
+		s = (char *)ft_malloc(j - i + 1);
 		if (s)
 			ft_strlcpy(s, s1 + i, j - i + 1);
 		return (s);

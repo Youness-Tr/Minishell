@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 11:33:23 by ajabri            #+#    #+#             */
-/*   Updated: 2023/11/18 11:47:18 by ajabri           ###   ########.fr       */
+/*   Updated: 2024/08/08 12:07:16 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	**ft_split(const char *s, char c)
 
 	if (!s)
 		return (NULL);
-	dp = malloc(sizeof(char *) * (ft_words(s, c) + 1));
+	dp = ft_malloc(sizeof(char *) * (ft_words(s, c) + 1));
 	if (!dp)
 		return (NULL);
 	if (!ft_mini_malloc(dp, s, c))

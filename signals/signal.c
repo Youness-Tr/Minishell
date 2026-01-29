@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 12:02:40 by ajabri            #+#    #+#             */
-/*   Updated: 2024/08/11 17:04:07 by ytarhoua         ###   ########.fr       */
+/*   Created: 2024/08/13 22:38:30 by ajabri            #+#    #+#             */
+/*   Updated: 2024/08/15 15:57:59 by ytarhoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../Header/headers.h"
 
-size_t	ft_strlen(const char *c)
+void	sigint_handler(int num)
 {
-	size_t	i;
+	(void)num;
+	g_neobash.status = 130;
+	ft_putstr_fd("\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
 
-	i = 0;
-	if (!c)
-		return (0);
-	while (c[i])
-		i++;
-	return (i);
+void	ft_init_signals(void)
+{
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

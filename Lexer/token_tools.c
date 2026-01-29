@@ -1,19 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_syntax.c                                        :+:      :+:    :+:   */
+/*   token_tools.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/01 05:53:15 by ajabri            #+#    #+#             */
-/*   Updated: 2024/07/01 05:54:50 by ajabri           ###   ########.fr       */
+/*   Created: 2024/08/13 22:14:57 by ajabri            #+#    #+#             */
+/*   Updated: 2024/08/13 22:22:16 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../Header/headers.h"
+#include "../Header/headers.h"
 
-void    ft_syntax()
+bool	is_badchar(char *c)
 {
-    if (neobash.prs_state == 1)
-        printf("neobash : syntax error\n");
+	if (c[0] == ';' || c[0] == '`' || c[0] == '\\')
+		return (true);
+	if (c[0] == '&' && ft_strlen(c) == 1)
+		return (true);
+	else
+		return (false);
+}
+
+bool	is_quotition(char i)
+{
+	if (i == 34)
+		return (true);
+	if (i == 39)
+		return (true);
+	else
+		return (false);
 }

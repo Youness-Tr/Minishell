@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 18:17:32 by ajabri            #+#    #+#             */
-/*   Updated: 2023/11/16 14:57:44 by ajabri           ###   ########.fr       */
+/*   Updated: 2024/08/08 10:30:23 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*ft_itoa(int n)
 	}
 	if (n == 0)
 		return (ft_strdup("0"));
-	str = (char *)malloc(sizeof(char) * (sign + num + 1));
+	str = (char *)ft_malloc(sizeof(char) * (sign + num + 1));
 	if (!str)
 		return (NULL);
 	if (sign)

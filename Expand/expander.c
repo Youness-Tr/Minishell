@@ -1,14 +1,28 @@
-# include "../Header/headers.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/09 16:43:22 by ytarhoua          #+#    #+#             */
+/*   Updated: 2024/08/15 16:41:02 by ytarhoua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../Header/headers.h"
 
 char	*ft_expand(char *str)
 {
-	char *res;
-	int	i = 0;
+	char	*res;
+	int		i;
 
+	i = 0;
+	if (!str)
+		return (NULL);
 	res = ft_strdup("");
 	while (str[i])
 	{
-		printf("here\n");
 		if (str[i] == '\'')
 			res = ft_strjoin(res, handle_squotes(str, &i));
 		else if (str[i] == '"' || str[i] == '`')
@@ -20,6 +34,3 @@ char	*ft_expand(char *str)
 	}
 	return (res);
 }
-
-//i have to put last char** that was executed to update that ('_') var.
-//when i write that cmd on my shell -> $_ so i have to execute last cmd.

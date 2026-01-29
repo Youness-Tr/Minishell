@@ -3,68 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ytarhoua <ytarhoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 12:35:31 by ytarhoua          #+#    #+#             */
-/*   Updated: 2024/07/03 18:41:01 by ytarhoua         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:55:35 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../Header/headers.h"
+#include "../Header/headers.h"
 
-/*
-lets say for exmple i have as a prompt 'unset PATH'
-i need to split the prompt by \n to get the the variable name that
-i should unset and basecly use the delone function to remove the node
-*/
-
-//TO DO
-
-void del(void *full)
+static void	iter(char **s, t_env *tmp, t_env *prev)
 {
-    free(full);
+	int	i;
+
+	while (tmp)
+	{
+		i = 1;
+		while (s[i] && tmp->next)
+		{
+			if (!ft_strcmp(s[i], tmp->key) && ft_strcmp(s[i], "_"))
+			{
+				if (prev)
+					prev->next = tmp->next;
+				else
+				{
+					prev = tmp->next;
+					g_neobash.envl = tmp->next;
+				}
+				tmp = prev;
+				break ;
+			}
+			i++;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }
 
-void ft_delone(t_env *lst, void (*del)(void*))
+void	ft_unset(char **s)
 {
-    if (!lst || !del)
-        return;
-    del(lst->key);
-    del(lst->value);
-    free(lst);
+	t_env	*tmp;
+	t_env	*prev;
+
+	tmp = g_neobash.envl;
+	prev = NULL;
+	if (!s[1])
+		return ;
+	iter(s, tmp, prev);
 }
-
-void ft_unset(char *s)
-{
-    g_shell *data;
-    t_env *envl = data->envl;
-    t_env *tmp = envl;
-    t_env *prev = NULL;
-
-    // skip spaces here;
-    if (!ft_strncmp(s, "unset", 5))
-    {
-        s += 5;
-        while (tmp)
-        {
-            if (!ft_strncmp(s, tmp->key, ft_strlen(s)))
-            {
-                if (prev)
-                    prev->next = tmp->next;
-                else
-                    data->envl = tmp->next;
-                ft_delone(tmp, del);
-                return;
-            }
-            else
-            {
-                prev = tmp;
-                tmp = tmp->next;
-            }
-        }
-        	ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(s, 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-    }
-}
-

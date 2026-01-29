@@ -1,148 +1,113 @@
-#include "../Header/headers.h"
-
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelayad <abelayad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajabri <ajabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 09:16:20 by abelayad          #+#    #+#             */
-/*   Updated: 2023/06/18 15:57:27 by abelayad         ###   ########.fr       */
+/*   Created: 2024/08/08 10:58:48 by ytarhoua          #+#    #+#             */
+/*   Updated: 2024/08/14 16:17:14 by ajabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Header/headers.h"
-
-static int	ft_export_err_msg(char *identifier)
-{
-	ft_putstr_fd("minishell: export: `", 2);
-	ft_putstr_fd(identifier, 2);
-	ft_putstr_fd("': not a valid identifier\n", 2);
-	return (1);
-}
-
-int	parse_key(char *str)
-{
-	int	i;
-
-	i = 0;
-	neobash.count = 0;
-	// printf("str is ::%s::\n", str);
-	if (!ft_isalpha(str[i]))
-		return (1);
-    i++;
-	while (str[i] && str[i] != '=' && str[i] == ' ')
-	{
-		if (!ft_isalnum(str[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 char	*get_key(char *str)
 {
 	int	i;
 
 	i = 0;
-	neobash.count = 0;
-	// printf("string is ::%s\n", str);
+	g_neobash.count = 0;
+	g_neobash.app = false;
 	while (str[i])
 	{
-		if (str[i] == '=' || str[i] == ' ')
+		if (!ft_strncmp(&str[i], "+=", 2))
 		{
-			neobash.count = i + 1;
-			// printf ("here\n");
+			g_neobash.app = true;
+			g_neobash.count = i + 2;
+			return (ft_substr(str, 0, i));
+		}
+		else if (str[i] == '=' || str[i] == ' ')
+		{
+			g_neobash.count = i + 1;
 			return (ft_substr(str, 0, i));
 		}
 		i++;
 	}
-	neobash.count = i;
-	// printf("i is ::%i\n", neobash.count);
+	g_neobash.count = i;
 	return (ft_strdup(str));
-}
-
-bool search_env(char *s)
-{
-    t_env *env = neobash.envl;
-    t_env *tmp = env;
-
-    while (tmp)
-    {
-        if (!ft_strcmp(s, tmp->key))
-            return (true);
-        tmp = tmp->next;
-    }
-    return (false);
 }
 
 char	*sub_value(char *str)
 {
-	int	i = 0;
-	int s = 0;
+	int		i;
+	int		s;
+	char	*res;
 
+	i = 0;
+	s = 0;
 	while (str[i] && str[i] != ' ')
 	{
 		if (str[i] == '=')
 		{
 			s = i + 1;
-			while (str[i])
-			{
-				i++;
-				if (!str[i])
-				{
-					neobash.count = i;
-					return (ft_substr(str, s, i - s)); // + 1 for space after '='
-				}
-				else if (str[i] == ' ')
-				{
-					neobash.count = i + 1;
-					return (ft_substr(str, s, i - s));
-				}
-			}
+			if (!str[s])
+				return (ft_strdup(""));
+			res = handle_quote(str, s);
+			return (res);
 		}
 		i++;
 	}
 	return (NULL);
 }
 
-int	ft_export(char *s)
+void	set_var(char *s, int *i)
 {
-	int		i;
-	int		exit;
 	char	*key;
 	char	*ss;
+	char	*app;
 
-	exit = 0;
-	if (!strcmp(s, "export "))
-    	i = 7;
-	if (!s[i])
-		print_export();
-	while (&s[i] && s[i])
+	key = get_key(&s[*i]);
+	if (search_env(key))
 	{
-		printf("entry is ::%s\n", &s[i]);
-		if (parse_key(&s[i]))
-			exit = ft_export_err_msg(&s[i]);
-		else
+		if (g_neobash.app == true)
 		{
-			key = get_key(&s[i]);
-			if (search_env(key))
-			{
-				update_env(key, sub_value(&s[i]));
-			}
-			else
-			{
-                ss = sub_value(&s[i]);
-				exp_back(exp_new(key, ss));
-			}
+			app = ft_strjoin(get_env_val(key), sub_value(&s[*i]));
+			update_env(key, app);
 		}
-		printf("key is ::%s |||| value is ::%s\n", key, ss);
-		i += neobash.count;
-		printf("ends in : %i \n", i);
-		// free kay and ss here;
-		// i have to incremenet here to get the new statmenet
+		else
+			update_env(key, sub_value(&s[*i]));
 	}
-    return(exit);
+	else
+	{
+		ss = sub_value(&s[*i]);
+		exp_back(exp_new(key, ss));
+	}
+}
+
+int	ft_export(char *s)
+{
+	int	i;
+
+	i = 0;
+	i = skip(s);
+	if (!(s[i]))
+	{
+		print_ex(g_neobash.envl);
+		return (1);
+	}
+	while (s[i])
+	{
+		if (s[i] == '\'' || s[i] == '"')
+			i++;
+		if (parse_key(&s[i]))
+		{
+			ft_error("bash: export: `$': not a valid identifier", &s[i]);
+			return (1);
+		}
+		else
+			set_var(s, &i);
+		i += g_neobash.count;
+	}
+	return (0);
 }

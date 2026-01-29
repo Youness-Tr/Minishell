@@ -6,14 +6,13 @@
 /*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 11:10:41 by ajabri            #+#    #+#             */
-/*   Updated: 2024/06/25 16:36:14 by kali             ###   ########.fr       */
+/*   Updated: 2024/08/08 10:38:13 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-void *ft_malloc(size_t size);
 
-char *ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1)
 {
 	char	*str;
 	size_t	i;
