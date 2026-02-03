@@ -482,12 +482,12 @@ This project covers important Unix/Linux concepts:
 
 ## 📄 License
 
-This project is part of the 42 School curriculum. Feel free to study and learn from it, but please don't copy it for your own 42 projects.
+This project is part of the 1337 School curriculum. Feel free to study and learn from it, but please don't copy it for your own 1337 projects.
 
 ---
 
-**Note**: This is a learning project created as part of 42 School's curriculum. While it implements many shell features, it's not intended to replace production shells like Bash or Zsh.
+**Note**: This is a learning project created as part of 1337/42Network School's curriculum. While it implements many shell features, it's not intended to replace production shells like Bash or Zsh.
 
 For questions or issues, please open an issue on GitHub or contact the contributors.
 
-**Made with ❤️ and lots of ☕ at 42 School**
+**Made with ❤️ and lots of ☕ at 1337 School**
