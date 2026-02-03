@@ -465,7 +465,7 @@ Memory safety features:
 ## 👥 Contributors
 
 - **Youness Tarhoua** ([@ytarhoua](https://github.com/Youness-Tr))
-- **Ayoub Jabri** ([@ajabri](https://github.com/ajabri))
+- **Abdelali Jabri** ([@ajabri](https://github.com/ajabrii))
 
 ---
 
